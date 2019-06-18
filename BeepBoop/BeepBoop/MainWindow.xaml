@@ -1,0 +1,295 @@
+﻿<Window x:Class="BeepBoop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BeepBoop"
+        xmlns:converters="clr-namespace:BeepBoop.Converters"
+        mc:Ignorable="d"
+        Title="BeepBoop" Height="550" Width="400" ResizeMode="CanMinimize" FontFamily="{StaticResource Fira Sans}" Icon="Resources/Images/BeepBoop.ico" Closing="Window_Closing" AllowsTransparency="True" WindowStyle="None" MouseDown="Window_MouseDown">
+    
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0,1" StartPoint="1,0">
+            <GradientStop Color="#FF424242" Offset="0"/>
+            <GradientStop Color="#FF555555" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="5*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Style="{StaticResource NoHighlight}" Width="15" BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{x:Null}" Margin="10,0" Click="Button_Minimize_Click">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Source="Resources/Images/minus_fat-icon.png" Stretch="Uniform">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Image Source="Resources/Images/minus_fat_selected-icon.png" Stretch="Uniform" >
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <Button Style="{StaticResource NoHighlight}" Width="15" BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{x:Null}" Click="Button_Close_Click">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Source="Resources/Images/cross-icon.png" Stretch="Uniform" >
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <Image Source="Resources/Images/cross_selected-icon.png" Stretch="Uniform" >
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="1" VerticalAlignment="Center">
+            <DockPanel Margin="2">
+                <Label Foreground="White">Playback device 1:</Label>
+                <Grid>
+                    <ComboBox Width="auto" ItemsSource="{Binding Path=Available_Devices, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedItem="{Binding Playback_Devices[0]}" VerticalContentAlignment="Center"></ComboBox>
+                    <TextBlock Text="Select playback device..." Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Setters>
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </Style.Setters>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=Playback_Devices[0].Name}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+            </DockPanel>
+
+            <Grid Margin="3">
+                <ProgressBar Value="{Binding Path=Playback_Volumes[0]}" Maximum="100" MouseDown="Volume_MouseDown" MouseMove="Volume_MouseMove" MouseUp="Volume_MouseUp"></ProgressBar>
+                <Label IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Path=Playback_Volumes[0], Converter={converters:StringFormatConverter}, ConverterParameter='Volume: {0:0}%'}"></Label>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" VerticalAlignment="Center">
+            <DockPanel Margin="2">
+                <Label Foreground="White">Playback device 2:</Label>
+                <Grid>
+                    <ComboBox Width="auto" ItemsSource="{Binding Path=Available_Devices, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedItem="{Binding Playback_Devices[1]}" VerticalContentAlignment="Center"></ComboBox>
+                    <TextBlock Text="Select playback device..." Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Style.Setters>
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </Style.Setters>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=Playback_Devices[1].Name}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+            </DockPanel>
+
+            <Grid Margin="3">
+                <ProgressBar Value="{Binding Path=Playback_Volumes[1]}" Maximum="100" MouseDown="Volume_MouseDown" MouseMove="Volume_MouseMove" MouseUp="Volume_MouseUp"></ProgressBar>
+                <Label IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding Path=Playback_Volumes[1], Converter={converters:StringFormatConverter}, ConverterParameter='Volume: {0:0}%'}"></Label>
+            </Grid>
+        </StackPanel>
+
+        <TabControl Name="TabControl" Grid.Row="3" Background="#FF424242">
+            <TabItem Name="TabItem_NumPad" Header="NumPad" Padding="25,0">
+
+                <ItemsControl ItemsSource="{Binding Playback_Items, Converter={converters:ItemsSourceLimitConverter}, ConverterParameter='9,0'}" AlternationCount="9">
+                    <ItemsControl.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="1,0">
+                            <GradientStop Color="#FF424242" Offset="0"/>
+                            <GradientStop Color="#FF555555" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ItemsControl.Background>
+
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Background="Transparent" Rows="3" Columns="3" Margin="5"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border Width="auto" Background="Gray" Margin="2" CornerRadius="1" BorderThickness="2" MouseDown="PlaybackItem_DoubleClick">
+
+                                <!-- Store NumPad-offset playback item in the border's tag. -->
+                                <Border.Tag>
+                                    <MultiBinding Converter="{converters:ArrayItemSelectorConverter}">
+                                        <Binding Path="Playback_Items" RelativeSource="{RelativeSource AncestorType={x:Type Window}}" />
+                                        <Binding Path="(ItemsControl.AlternationIndex)" RelativeSource="{RelativeSource TemplatedParent}" Converter="{converters:AlternationNumpadConverter}" ConverterParameter='0'/>
+                                    </MultiBinding>
+                                </Border.Tag>
+
+                                <Border.BorderBrush>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="DarkGray" Offset="0" />
+                                        <GradientStop Color="Gray" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.BorderBrush>
+
+                                <Grid>
+                                    <Image Width="auto" Source="{Binding Path=Tag.Image, RelativeSource={RelativeSource AncestorType={x:Type Border}}, Converter={converters:StringToImageSourceConverter}}"></Image>
+                                    <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="30" Margin="10,4" FontWeight="Bold" Content="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={converters:AlternationNumpadConverter}, ConverterParameter='1'}"></Label>
+                                </Grid>
+                            </Border>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </TabItem>
+
+            <TabItem Name="TabItem_CTRL" Header="Ctrl" Padding="25,0">
+
+                <ItemsControl ItemsSource="{Binding Playback_Items, Converter={converters:ItemsSourceLimitConverter}, ConverterParameter='9,9'}" AlternationCount="9">
+                    <ItemsControl.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="1,0">
+                            <GradientStop Color="#FF424242" Offset="0"/>
+                            <GradientStop Color="#FF555555" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ItemsControl.Background>
+                    
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Background="Transparent" Rows="3" Columns="3" Margin="5"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border Name="test1" Width="auto" Background="Gray" Margin="2" CornerRadius="1" BorderThickness="2" MouseDown="PlaybackItem_DoubleClick">
+
+                                <!-- Store NumPad-offset playback item in the border's tag. -->
+                                <Border.Tag>
+                                    <MultiBinding Converter="{converters:ArrayItemSelectorConverter}">
+                                        <Binding Path="Playback_Items" RelativeSource="{RelativeSource AncestorType={x:Type Window}}" />
+                                        <Binding Path="(ItemsControl.AlternationIndex)" RelativeSource="{RelativeSource TemplatedParent}" Converter="{converters:AlternationNumpadConverter}" ConverterParameter='9'/>
+                                    </MultiBinding>
+                                </Border.Tag>
+
+                                <Border.BorderBrush>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="DarkGray" Offset="0" />
+                                        <GradientStop Color="Gray" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.BorderBrush>
+
+                                <Grid>
+                                    <Image Width="auto" Source="{Binding Path=Tag.Image, RelativeSource={RelativeSource AncestorType={x:Type Border}}, Converter={converters:StringToImageSourceConverter}}"></Image>
+                                    <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="30" Margin="10,4" FontWeight="Bold" Content="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={converters:AlternationNumpadConverter}, ConverterParameter='1'}"></Label>
+                                </Grid>
+                            </Border>
+
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </TabItem>
+
+            <TabItem Name="TabItem_ALT" Header="Alt" Padding="25,0">
+
+                <ItemsControl ItemsSource="{Binding Playback_Items, Converter={converters:ItemsSourceLimitConverter}, ConverterParameter='9,18'}" AlternationCount="9">
+                    <ItemsControl.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="1,0">
+                            <GradientStop Color="#FF424242" Offset="0"/>
+                            <GradientStop Color="#FF555555" Offset="1"/>
+                        </LinearGradientBrush>
+                    </ItemsControl.Background>
+                    
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Background="Transparent" Rows="3" Columns="3" Margin="5"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border BorderThickness="1" BorderBrush="Black">
+                                <Border Width="auto" Background="Gray" Margin="2" CornerRadius="1" BorderThickness="2" MouseDown="PlaybackItem_DoubleClick">
+
+                                    <!-- Store NumPad-offset playback item in the border's tag. -->
+                                    <Border.Tag>
+                                        <MultiBinding Converter="{converters:ArrayItemSelectorConverter}">
+                                            <Binding Path="Playback_Items" RelativeSource="{RelativeSource AncestorType={x:Type Window}}"/>
+                                            <Binding Path="(ItemsControl.AlternationIndex)" RelativeSource="{RelativeSource TemplatedParent}" Converter="{converters:AlternationNumpadConverter}" ConverterParameter='18'/>
+                                        </MultiBinding>
+                                    </Border.Tag>
+
+                                    <Border.BorderBrush>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                            <GradientStop Color="DarkGray" Offset="0" />
+                                            <GradientStop Color="Gray" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.BorderBrush>
+
+                                    <Grid>
+                                        <Image Width="auto" Source="{Binding Path=Tag.Image, RelativeSource={RelativeSource AncestorType={x:Type Border}}, Converter={converters:StringToImageSourceConverter}}"></Image>
+                                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="30" Margin="10,4" FontWeight="Bold" Content="{Binding Path=(ItemsControl.AlternationIndex), RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={converters:AlternationNumpadConverter}, ConverterParameter='1'}"></Label>
+                                    </Grid>
+                                </Border>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>

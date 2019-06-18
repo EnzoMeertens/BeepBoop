@@ -1,0 +1,130 @@
+[Version]
+Signature="$CHICAGO$"
+Class=MEDIA
+Provider=%PALEBLUE%
+ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
+DriverVer = 02/22/2007, 6.0.6000.1
+CatalogFile=paleblue.cat
+
+[SourceDisksNames]
+222="PALEBLUE Driver Disk","",222
+
+[SourceDisksFiles]
+beepboop.sys=222
+
+;;This syntax is only recognized on Windows XP and above- it is needed to install 64-bit drivers on
+;;Windows Server 2003 Service Pack 1 and above.
+
+[Manufacturer]
+%MfgName%=PaleBlueDeviceSection,NTAMD64,NTIA64
+
+;;  For Windows Server 2003 Service Pack 1 and above, a 64-bit OS will not install a driver
+;;  unless the Manufacturer and Models Sections explicitly show it is a driver for that platform
+;;  But the individual model section decorations (or lack thereof) work as they always have.
+;;  All of the model sections referred to are undecorated or NT-decorated, hence work on all platforms
+
+[PaleBlueDeviceSection]
+%PALEBLUE_WaveExtensible.DeviceDesc%=PALEBLUE_WaveExtensible,*PALEBLUEWaveExtensible
+
+;; This section enables installing on x64 systems
+
+[PaleBlueDeviceSection.NTAMD64]
+%PALEBLUE_WaveExtensible.DeviceDesc%=PALEBLUE_WaveExtensible,*PALEBLUEWaveExtensible
+
+;;  This section enables installing on Itanium systems
+
+[PaleBlueDeviceSection.NTIA64]
+%PALEBLUE_WaveExtensible.DeviceDesc%=PALEBLUE_WaveExtensible,*PALEBLUEWaveExtensible
+
+[DestinationDirs]
+PALEBLUE_WaveExtensible.CopyList=10,system32\drivers
+
+;======================================================
+; PALEBLUE_WaveExtensible
+;======================================================
+[PALEBLUE_WaveExtensible]
+AlsoInstall=ks.registration(ks.inf),wdmaudio.registration(wdmaudio.inf)
+CopyFiles=PALEBLUE_WaveExtensible.CopyList
+AddReg=PALEBLUE_WaveExtensible.AddReg
+
+[PALEBLUE_WaveExtensible.CopyList]
+beepboop.sys
+
+[PALEBLUE_WaveExtensible.Interfaces]
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,PALEBLUE.I.Wave
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_Wave%,PALEBLUE.I.Wave
+AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_Wave%,PALEBLUE.I.Wave
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,PALEBLUE.I.Topo
+
+[PALEBLUE_WaveExtensible.AddReg]
+HKR,,AssociatedFilters,,"wdmaud,redbook"
+HKR,,Driver,,beepboop.sys
+
+HKR,Drivers,SubClasses,,"wave,mixer"
+
+HKR,Drivers\wave\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\mixer\wdmaud.drv,Driver,,wdmaud.drv
+
+HKR,Drivers\wave\wdmaud.drv,Description,,%PALEBLUE_WaveExtensible.DeviceDesc%
+HKR,Drivers\mixer\wdmaud.drv,Description,,%PALEBLUE_WaveExtensible.DeviceDesc%
+
+;======================================================
+; COMMON
+;======================================================
+[PALEBLUE.I.Wave]
+AddReg=PALEBLUE.I.Wave.AddReg
+[PALEBLUE.I.Wave.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%PALEBLUE.Wave.szPname%
+
+[PALEBLUE.I.Topo]
+AddReg=PALEBLUE.I.Topo.AddReg
+[PALEBLUE.I.Topo.AddReg]
+HKR,,CLSID,,%Proxy.CLSID%
+HKR,,FriendlyName,,%PALEBLUE.Topo.szPname%
+
+;======================================================
+; PALEBLUE_Extensible
+;======================================================
+[PALEBLUE_WaveExtensible.NT]
+Include=ks.inf,wdmaudio.inf
+Needs=KS.Registration, WDMAUDIO.Registration
+CopyFiles=PALEBLUE_WaveExtensible.CopyList
+AddReg=PALEBLUE_WaveExtensible.AddReg
+
+[PALEBLUE_WaveExtensible.NT.Interfaces]
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Wave%,PALEBLUE.I.Wave
+AddInterface=%KSCATEGORY_RENDER%,%KSNAME_Wave%,PALEBLUE.I.Wave
+AddInterface=%KSCATEGORY_CAPTURE%,%KSNAME_Wave%,PALEBLUE.I.Wave
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,PALEBLUE.I.Topo
+
+[PALEBLUE_WaveExtensible.NT.Services]
+AddService=paleblue_WaveExtensible,0x00000002,paleblue_WaveExtensible_Service_Inst
+
+[paleblue_WaveExtensible_Service_Inst]
+DisplayName=%paleblue_WaveExtensible.SvcDesc%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%10%\system32\drivers\beepboop.sys
+
+;======================================================
+; COMMON
+;======================================================
+[Strings]
+PALEBLUE="PaleBlue"
+MfgName="PaleBlue"
+PALEBLUE_WaveExtensible.DeviceDesc="BeepBoop Virtual Audio Device"
+
+PALEBLUE.Wave.szPname="PALEBLUE Wave"
+PALEBLUE.Topo.szPname="PALEBLUE Topology"
+
+Proxy.CLSID="{17CCA71B-ECD7-11D0-B908-00A0C9223196}"
+KSCATEGORY_AUDIO="{6994AD04-93EF-11D0-A3CC-00A0C9223196}"
+KSCATEGORY_RENDER="{65E8773E-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_CAPTURE="{65E8773D-8F56-11D0-A3B9-00A0C9223196}"
+
+KSNAME_Wave="Wave"
+KSNAME_Topology="Topology"
+
+PALEBLUE_WaveExtensible.SvcDesc="BeepBoop Virtual Audio Device"

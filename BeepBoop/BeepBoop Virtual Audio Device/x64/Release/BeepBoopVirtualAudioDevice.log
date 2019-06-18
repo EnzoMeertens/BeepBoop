@@ -1,0 +1,19 @@
+﻿  Building 'BeepBoopVirtualAudioDevice' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  Stamping x64\Release\beepboop.inf
+  Stamping [Version] section with DriverVer=06/18/2019,17.31.14.155
+  Stamping [Version] section with Provider=PaleBlue
+C:\Users\Marcin\Downloads\Virtual-Audio-Pipeline-master (1)\Virtual-Audio-Pipeline-master\BeepBoop Virtual Audio Device\beepboop.inf(26-26): warning 2010: Section [PaleBlueDeviceSection] should have '.NTx86' decoration.
+C:\Users\Marcin\Downloads\Virtual-Audio-Pipeline-master (1)\Virtual-Audio-Pipeline-master\BeepBoop Virtual Audio Device\beepboop.inf(45-45): warning 2083: Section [paleblue_waveextensible] not referenced or used.
+C:\Users\Marcin\Downloads\Virtual-Audio-Pipeline-master (1)\Virtual-Audio-Pipeline-master\BeepBoop Virtual Audio Device\beepboop.inf(53-53): warning 2083: Section [paleblue_waveextensible.interfaces] not referenced or used.
+  BeepBoopVirtualAudioDevice.vcxproj -> C:\Users\Marcin\Downloads\Virtual-Audio-Pipeline-master (1)\Virtual-Audio-Pipeline-master\BeepBoop Virtual Audio Device\\bin\x64\Win10\beepboop.sys
+  .........................
+  Signability test complete.
+  
+  Errors:
+  None
+  
+  Warnings:
+  None
+  
+  Catalog generation complete.
+  C:\Users\Marcin\Downloads\Virtual-Audio-Pipeline-master (1)\Virtual-Audio-Pipeline-master\BeepBoop Virtual Audio Device\bin\x64\Win10\BeepBoopVirtualAudioDevice\paleblue.cat

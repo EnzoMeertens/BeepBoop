@@ -1,0 +1,33 @@
+﻿<Application x:Class="BeepBoop.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BeepBoop"
+             xmlns:converters="clr-namespace:BeepBoop.Converters"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+
+        <ResourceDictionary>
+
+            <FontFamily x:Key="Fira Sans">/Fonts/#FiraSans-Regular</FontFamily>
+
+            <converters:GroupConverter x:Key="GroupConverter">
+                <converters:AlternationNumpadConverter/>
+                <converters:StringFormatConverter/>
+            </converters:GroupConverter>
+
+            <Style x:Key="NoHighlight" TargetType="Button">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
